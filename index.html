@@ -45,13 +45,14 @@
             <div class="row">
                 <div id="dataContainer" >
                     <label for="indexInput">Index:</label>
-                    <input type="number" id="indexInput" min="0" max="0" >
                     <button onclick="previousData()">Previous</button>
+                    <input type="number" id="indexInput" min="0" max="0" >
+
                     <button onclick="nextData()">Next</button>
                 </div>
             </div>
             <div class="row">               
-                <table id="dataTable" style="width: 100%;">
+                <table id="dataTable" style="width: 50%;">
                     <thead>
                         <tr>
                             <th style="width: 20%;">Key</th>
@@ -64,6 +65,21 @@
                     <tbody></tbody>
                 </table>
             </div>
+            <div class="row">
+                <button  onclick="copyToClipboard('nametag')">nametag</button>
+                <button  onclick="copyToClipboard('Client')">Client</button>
+            </div>
+            <hr>
+            <div class="row">
+                <button  onclick="copyToClipboard('clientContact')">clientContact</button>
+            </div>
+            <div class="row">
+                <button  onclick="copyToClipboard('contactname')">contactname</button>
+            </div>
+            <div class="row">
+                <button  onclick="copyToClipboard('usercreate')">usercreate</button>
+            </div>
+
         </div>
 
     </body>
@@ -176,7 +192,7 @@
             tempInput.select();
             document.execCommand("copy");
             document.body.removeChild(tempInput);
-            alert("Value copied to clipboard: " + value);
+            //alert("Value copied to clipboard: " + value);
         }
     </script>
 </html>
