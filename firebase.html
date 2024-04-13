@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" id="username" placeholder="name">
+    <button id="add-user">Add</button>
+    
+</body>
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-analytics.js";
+    import { getFirestore,collection, getDocs, addDoc, setDoc , doc , deleteDoc, updateDoc  } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+
+  };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    const db = getFirestore(app);
+
+    //Get All User (OK)
+    //getAllUser();
+    async function getAllUser(){
+        var users = [];
+        const querySnapshot = await getDocs(collection(db, "users"));
+        querySnapshot.forEach((doc) => {
+            // console.log(`${doc.id} => ${doc.data()}`);
+            users.push(doc.data());
+        });
+        console.log(users);
+        return users;
+    }
+
+    //Get An User
+
+    //getAnUser('J2UsD1Uy9Vz1gy5pfZaS');
+    async function getAnUser(idUser) {
+        const querySnapshot = await getDocs(collection(db, "users"));
+        const user = querySnapshot.docs.find((doc) => doc.id === idUser);
+
+        if (user) {
+            console.log(user.data());
+            return user.data();
+        } else {
+            throw new Error("User not found");
+        }
+    }
+    // Add User (OK) add? set?
+    //addUser();
+    async function addUser(username){
+        try {
+                const docRef = await addDoc(collection(db, "users"), {
+                    id: "",
+                    name: username
+                });
+                // const docRef = await setDoc(doc(db, "users"), {
+                //     name: "Los Angeles",
+                //     id: "",
+                // });
+
+                console.log("Document written with ID: ", docRef.id);
+                updateUserID(docRef.id);
+
+            } catch (e) {
+            console.error("Error adding document: ", e);
+        }
+    }
+
+    async function updateUserID(userId){
+        // Tìm doc có id = userID, set giá trị field 'id' của doc đó = userId
+        const querySnapshot = await getDocs(collection(db, "users"));
+        const user = querySnapshot.docs.find((doc) => doc.id === userId);
+        if (user) {
+            // Cập nhật giá trị của trường 'id' trong tài liệu
+            await updateDoc(doc(db, "users", user.id), {
+                id: userId
+            });
+            console.log("User ID updated successfully.");
+        } else {
+            console.log("User not found.");
+        }
+    }
+
+    //Delete 1 & All User
+    //deleteAllUser();
+    async function deleteAllUser(){
+        var users = await getAllUser();
+        users.forEach( async function(user){
+            console.log(user);
+            await deleteDoc(doc(db, "users", user.id));
+        })
+    }
+
+    var addUserBtn = document.getElementById('add-user');
+    var nameInput = document.getElementById('username');
+    addUserBtn.addEventListener('click', function(){
+        addUser(nameInput.value);
+    });
+
+
+
+
+  </script>
+</html>
